@@ -1,101 +1,125 @@
-# Node.js Express Socket.io PostgreSQL Chat Application
+# Real-Time Chat Application
 
-This project is a backend service built using Node.js, Express, Socket.io for real-time communication, and PostgreSQL as the database. It follows a modular architecture, making it scalable and maintainable.
+A full-featured real-time chat application built with Express.js, Socket.io, and PostgreSQL, supporting direct messaging, group chats, and file sharing.
 
 ## Features
 
-1. **User Authentication**
-   - JWT-based authentication.
-   - Users can register and log in.
-   - Secure API access with JWT middleware.
+- **User Authentication**
+  - JWT-based authentication
+  - User registration and login
+  - Password hashing with bcrypt
 
-2. **Real-Time Chat**
-   - One-to-one and group messaging.
-   - Real-time messaging using Socket.io.
-   - Chat history stored in PostgreSQL.
-   - Users can create groups and invite others.
+- **Direct Messaging**
+  - One-to-one conversations
+  - Real-time message delivery
+  - Read receipts and typing indicators
 
-3. **File Attachments**
-   - Users can send/receive PDF, JPEG, and PNG files.
-   - AWS S3 is used for file storage.
-   - File metadata (URL, type, sender) is saved in the database.
+- **Group Chats**
+  - Create and manage group conversations
+  - Add participants
+  - Group admin capabilities (Future)
 
-## API Endpoints
+- **File Sharing**
+  - Upload and share files in chats with real-time delivery
+  - File metadata storage
 
-- **User Management**
-  - `POST /auth/register` - Register a user
-  - `POST /auth/login` - Authenticate user
-  - `GET /users` - Get users (JWT protected)
+- **Real-Time Events**
+  - Live message delivery
+  - Typing indicators
+  - Online/offline status updates
 
-- **Chat Functionality**
-  - `POST /chats/send-message` - Send a message
-  - `GET /chats/:chatId` - Fetch chat history
+## Tech Stack
 
-- **Group Management**
-  - `POST /groups` - Create a new group
-  - `POST /groups/:groupId/add-user` - Add a user to a group
-  - `GET /groups/:groupId/messages` - Fetch group messages
+- **Backend**: Node.js, Express.js
+- **Database**: PostgreSQL with Sequelize ORM
+- **Real-Time**: Socket.io
+- **Authentication**: JSON Web Tokens (JWT)
+- **File Storage**: Local filesystem (configurable for S3)
 
-- **File Uploads**
-  - `POST /uploads` - Upload & send a file
+## Setup & Installation
 
-## WebSockets (Socket.io)
+### Prerequisites
 
-Handles events for:
-- `connect` / `disconnect`
-- `send_message` / `receive_message`
-- `create_group` / `join_group` / `group_message`
-- `send_file` / `receive_file`
+- Node.js (v14+)
+- PostgreSQL (v12+)
+- npm or yarn
 
-## Project Structure
+### Installation Steps
 
-```
-nodejs-express-socketio-postgres
-├── src
-│   ├── config
-│   ├── models
-│   ├── services
-│   ├── controllers
-│   ├── routes
-│   ├── sockets
-│   ├── middlewares
-│   ├── utils
-│   └── app.js
-├── server.js
-├── .env.example
-├── .gitignore
-├── package.json
-├── package-lock.json
-├── sequelize.config.js
-├── migrations/
-├── seeders/
-└── README.md
-```
-
-## Getting Started
-
-1. Clone the repository:
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/abhinavv9/Chat-app-server.git
+   cd Chat-app-server
    ```
-   git clone <repository-url>
-   ```
-
-2. Navigate to the project directory:
-   ```
-   cd nodejs-express-socketio-postgres
-   ```
-
-3. Install dependencies:
-   ```
+2. **Install Dependencies**
+   ```bash
    npm install
    ```
-
-4. Create a `.env` file based on the `.env.example` file and configure your environment variables.
-
-5. Run the application:
+3. **Run migrations to set up the database**
+   ```bash
+   npx sequelize-cli db:migrate
    ```
-   npm start
+4. **Start the server**
+   ```bash
+   npm run dev   # Development mode with nodemon
+   npm start     # Production mode
    ```
 
-## License
+### Environment Variables
+Create a .env file in the root directory with the following variables:
+```env
+# Database Configuration
+DATABASE_URL=postgresql://username:password@localhost:5432/database_name
 
-This project is licensed under the MIT License.
+# Authentication
+JWT_SECRET=your_jwt_secret_key
+
+# Server Configuration
+PORT=3000
+NODE_ENV=development
+
+# File Storage (uncomment for AWS S3)
+# AWS_ACCESS_KEY_ID=your_aws_access_key_id
+# AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
+# AWS_REGION=your_aws_region
+# S3_BUCKET_NAME=your_s3_bucket_name
+```
+
+
+## Future Improvements
+
+### Performance Enhancements
+#### Redis Integration
+- Add Redis for socket session storage
+- Implement pub/sub for scaling with multiple server instances
+- Cache frequent database queries
+
+#### Database Optimizations
+- Add database indexes for frequent queries
+- Implement pagination for message retrieval
+- Archive old messages to improve query performance
+
+### Feature Enhancements
+#### Message Features
+- Message editing and deletion
+- Message reactions (emoji responses)
+- Message threading for organized discussions
+
+#### Media Enhancements
+- Image compression and thumbnails
+- Video/audio message support
+- Real-time media streaming
+
+#### User Experience
+- Read receipts with timestamps
+- Message delivery confirmations
+- Advanced notification preferences
+
+### Security Improvements
+#### End-to-End Encryption
+- Implement E2EE for direct messages
+- Key management system
+
+#### Rate Limiting
+- Prevent spam and abuse with rate limits
+- IP-based and user-based limits
