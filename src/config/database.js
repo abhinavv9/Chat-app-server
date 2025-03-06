@@ -15,9 +15,14 @@ if (process.env.DATABASE_URL) {
       acquire: 30000,
       idle: 10000
     },
-    // Force IPv4 connections
-    host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 5432
+    dialectOptions: {
+      // Force IPv4 instead of IPv6
+      family: 4,
+      ssl: {
+        require: true,
+        rejectUnauthorized: false // You might need this for Supabase
+      }
+    }
   });
 } else {
   // Fall back to individual parameters if no connection string
@@ -35,6 +40,14 @@ if (process.env.DATABASE_URL) {
         min: 0,
         acquire: 30000,
         idle: 10000
+      },
+      dialectOptions: {
+        // Force IPv4 instead of IPv6
+        family: 4,
+        ssl: {
+          require: true,
+          rejectUnauthorized: false // You might need this for Supabase
+        }
       }
     }
   );
